@@ -28,6 +28,10 @@ app.use(express.static(__dirname));
 
 function auth(req, res, next) {
 
+    console.log("Cookies:", req.cookies);
+
+    const token = req.cookies.token;
+
     const token = req.cookies.token;
 
     if (!token)
@@ -119,6 +123,7 @@ app.post("/api/login", async (req, res) => {
         username: user.username
     });
 
+    console.log("Cookie отправлена");
 });
 
 app.get("/api/me", auth, (req, res) => {
@@ -137,7 +142,7 @@ app.post("/api/logout", (req, res) => {
 
 });
 
-app.get("*", (req, res) => {
+app.get("/", (req, res) => {
 
     res.sendFile(path.join(__dirname, "index.html"));
 
