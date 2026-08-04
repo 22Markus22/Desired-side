@@ -1,0 +1,167 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    background:#fafafa;
+    color:#111;
+}
+
+header{
+    height:70px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 40px;
+    border-bottom:1px solid #ddd;
+}
+
+footer{
+    height:180px;
+    display:flex;
+    justify-content:space-between;
+    padding:40px;
+    padding-top:20px;
+    border-top:1px solid #ddd;
+}
+
+.logo{
+    color:#ff3b30;
+    font-size:32px;
+    font-weight:bold;
+}
+
+nav{
+    display:flex;
+    gap:15px;
+}
+
+nav a{
+    text-decoration:none;
+    color:#333;
+    padding:8px 14px;
+    font-size:14px;
+}
+
+.column{
+    margin-right: auto;
+    margin-left: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.column a{
+    text-decoration: none;
+    color: #333;
+    padding: 8px 14px;
+    font-size: 16px;
+}
+
+.header-buttons{
+    display:flex;
+    gap:10px;
+}
+
+button{
+    cursor:pointer;
+    border-radius:8px;
+    padding:9px 16px;
+    border:none;
+}
+
+.light{
+    background:white;
+    border:1px solid #999;
+    transition: background 0.2s;
+}
+
+.light:hover{
+    background: lightgray;
+    transition: 0.2s;
+}
+
+.dark{
+    background:#222;
+    color:white;
+    transition: background 0.2s;
+}
+
+.dark:hover{
+    background: gray;
+    transition: 0.2s;
+}
+
+.hero{
+    text-align:center;
+    padding:130px 20px;
+}
+
+.hero h1{
+    font-size:72px;
+    font-weight:700;
+}
+
+.hero h2{
+    font-size:34px;
+    font-weight:300;
+    margin-top:10px;
+}
+
+.hero-buttons{
+    margin-top:30px;
+    display:flex;
+    justify-content:center;
+    gap:15px;
+}
+
+.about{
+    max-width:1200px;
+    margin:auto;
+    padding:60px 20px;
+}
+
+.about h2{
+    margin-bottom:50px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:40px;
+    margin-bottom:50px;
+}
+
+.card h3{
+    margin-bottom:15px;
+}
+
+.card p{
+    color:#666;
+    line-height:1.6;
+}
+
+.warning h3{
+    margin-bottom:10px;
+}
+
+.warning p{
+    color:#666;
+}
+
+.gallery{
+    max-width:1200px;
+    margin:70px auto;
+    display:flex;
+    justify-content:space-between;
+    gap:40px;
+    padding:0 20px;
+}
+
+.gallery img{
+    width:48%;
+    border-radius:8px;
+}
