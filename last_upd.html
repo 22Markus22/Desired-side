@@ -6,6 +6,25 @@
     <title>Last Update</title>
     <link rel="stylesheet" href="style_lu.css">
 </head> 
+
+<script src="auth.js"></script>
+<script>
+(async()=>{
+const user=await currentUser();
+if(!user)
+    return;
+document.getElementById("headerButtons").innerHTML=`
+<span style="padding-top:9px">
+${user.username}
+</span>
+<button class="dark"
+onclick="logout()">
+Выйти
+</button>
+`;
+})();
+</script>
+
 <body>
 <header>
     <nav>
@@ -16,9 +35,9 @@
         <a href="current_work.html">Текущий этап разработки</a>
         <a href="#foot">Соцсети</a>
     </nav>
-    <div class="header-buttons">
-        <button class="light">Войти</button>
-        <button class="dark">Зарегистрироваться</button>
+    <div id="headerButtons" class="header-buttons">
+    <button class="light"onclick="location.href='login.html'">Войти</button>
+    <button class="dark"onclick="location.href='register.html'">Регистрация</button>
     </div>
 </header>
 
