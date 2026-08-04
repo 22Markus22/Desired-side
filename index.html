@@ -6,8 +6,29 @@
     <title>Desired Side</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
+<script src="auth.js"></script>
+<script>
+
+(async()=>{
+const user=await currentUser();
+
+if(!user)
+    return;
+
+document.getElementById("headerButtons").innerHTML=`
+<span style="padding-top:9px">
+${user.username}
+</span>
+<button class="dark"
+onclick="logout()">
+Выйти
+</button>
+`;
+})();
+</script>
+
+<body>
 <header>
     <div class="logo" id="top">DS</div>
     <nav>
@@ -16,8 +37,8 @@
         <a href="#foot">Соцсети</a>
     </nav>
     <div class="header-buttons">
-        <button onclick="window.location.href='register.html'" class="light">Войти</button>
-        <button onclick="window.location.href='register.html'" class="dark">Зарегистрироваться</button>
+        <button id="headerButtons" onclick="window.location.href='register.html'" class="light">Войти</button>
+        <button id="headerButtons" onclick="window.location.href='register.html'" class="dark">Зарегистрироваться</button>
     </div>
 </header>
 
@@ -25,8 +46,8 @@
     <h1>Desired Side</h1>
     <h2>News paper</h2>
     <div class="hero-buttons">
-        <button onclick="window.location.href='register.html'" class="light">Войти</button>
-        <button onclick="window.location.href='register.html'" class="dark">Зарегистрироваться</button>
+        <button id="headerButtons"onclick="window.location.href='register.html'" class="light">Войти</button>
+        <button id="headerButtons"onclick="window.location.href='register.html'" class="dark">Зарегистрироваться</button>
     </div>
 </section>
 
