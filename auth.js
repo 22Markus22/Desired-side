@@ -37,7 +37,7 @@ async function register() {
 
 async function login() {
 
-    const email = document.getElementById("email").value;
+    const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
     const response = await fetch(API + "/api/login", {
@@ -54,7 +54,7 @@ async function login() {
 
         body: JSON.stringify({
 
-            email,
+            username,
             password
 
         })
@@ -102,3 +102,45 @@ async function logout(){
     location.reload();
 
 }
+
+async function updateHeader() {
+
+    const user = await currentUser();
+
+    if (!user)
+        return;
+
+
+    const header = document.getElementById("headerButtons");
+    const hero = document.getElementById("heroButtons");
+
+
+    if (header) {
+
+        header.innerHTML = `
+            <span>
+                ${user.username}
+            </span>
+
+            <button class="dark" onclick="logout()">
+                Выйти
+            </button>
+        `;
+
+    }
+
+
+    if (hero) {
+
+        hero.innerHTML = `
+            <h3>
+                Добро пожаловать, ${user.username}
+            </h3>
+        `;
+
+    }
+
+}
+
+
+updateHeader();

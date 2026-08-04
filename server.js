@@ -32,8 +32,6 @@ function auth(req, res, next) {
 
     const token = req.cookies.token;
 
-    const token = req.cookies.token;
-
     if (!token)
         return res.status(401).json({
             message: "Не авторизован"
@@ -86,15 +84,15 @@ app.post("/api/register", async (req, res) => {
 
 app.post("/api/login", async (req, res) => {
 
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
     const user = db.prepare(
-        "SELECT * FROM users WHERE email=?"
-    ).get(email);
+        "SELECT * FROM users WHERE username=?"
+    ).get(username);
 
     if (!user)
         return res.status(401).json({
-            message: "Неверный email или пароль"
+            message: "Неверное имя пользователя или пароль"
         });
 
     const ok = await bcrypt.compare(password, user.password);
