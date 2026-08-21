@@ -157,25 +157,28 @@ button{
     border-radius:8px;
 }
 
-.progress_bar{
-    margin:50px;
+.progress_bar {
+    margin: 50px;
 }
 
-.line{
-    width:500px;
-    height:8px;
-    background:#d9d9d9;
-    position:relative;
-    border-radius:10px;
+.progress_background {
+    width: 500px;
+    height: 8px;
+    background: #d9d9d9;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-.line::after{
-    content:"";
-    position:absolute;
-    left:0;
-    top:0;
-    width:300px;
-    height:8px;
-    background:#2196f3;
-    border-radius:10px;
+.line {
+    width: 0%;
+    height: 8px;
+    background: #2196f3;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.progress_percent {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
 }

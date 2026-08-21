@@ -1,0 +1,47 @@
+{
+    "areas": [
+        {
+            "name": "Программирование",
+            "tasks": [
+                {
+                    "name": "Система регистрации",
+                    "status": "Done"
+                },
+                {
+                    "name": "Система авторизации",
+                    "status": "In progress"
+                },
+                {
+                    "name": "Личный кабинет",
+                    "status": "Not done"
+                }
+            ]
+        },
+        {
+            "name": "Графика",
+            "tasks": [
+                {
+                    "name": "Модели персонажей",
+                    "status": "Done"
+                },
+                {
+                    "name": "Окружение",
+                    "status": "In progress"
+                }
+            ]
+        },
+        {
+            "name": "Сюжет",
+            "tasks": [
+                {
+                    "name": "Основная сюжетная линия",
+                    "status": "Done"
+                },
+                {
+                    "name": "Диалоги",
+                    "status": "Not done"
+                }
+            ]
+        }
+    ]
+}

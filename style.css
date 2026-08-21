@@ -146,6 +146,7 @@ button{
 
 .card p{
     color:#666;
+    border-radius:8px;
     line-height:1.6;
     margin-left: 15px;
     margin-right: 15px;
