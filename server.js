@@ -151,41 +151,79 @@ app.get("/api/tasks", async (req, res) => {
     try {
 
         const response = await fetch(
-            `https://raw.githubusercontent.com/22Markus22/Desired-side/main/tasks.json?t=${Date.now()}`,
+            "https://raw.githubusercontent.com/22Markus22/Desired-side/main/tasks.json",
             {
                 cache: "no-store"
             }
         );
 
-
         if (!response.ok) {
-
             throw new Error(
                 `GitHub ответил с кодом ${response.status}`
             );
-
         }
-
 
         const data = await response.json();
 
 
-        res.set("Cache-Control", "no-store");
+        const result = {};
 
-        res.json(data);
+
+        for (const area of data.areas) {
+
+            if (!area.tasks || area.tasks.length === 0) {
+                result[area.name] = 0;
+                continue;
+            }
+
+
+            let total = 0;
+
+
+            for (const task of area.tasks) {
+
+                if (task.status === "Done") {
+
+                    total += 100;
+
+                } else if (task.status === "In progress") {
+
+                    total += 50;
+
+                } else if (task.status === "Not done") {
+
+                    total += 0;
+
+                }
+
+            }
+
+
+            result[area.name] =
+                Math.round(total / area.tasks.length);
+
+        }
+
+
+        res.set(
+            "Cache-Control",
+            "no-store"
+        );
+
+
+        res.json(result);
+
 
     } catch (error) {
 
         console.error(
-            "Ошибка загрузки tasks.json:",
+            "Ошибка загрузки задач:",
             error
         );
 
 
         res.status(500).json({
-
-            message: "Не удалось загрузить задачи"
-
+            message: "Не удалось загрузить данные"
         });
 
     }

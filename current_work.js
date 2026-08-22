@@ -10,74 +10,32 @@ async function loadProgress() {
         );
 
         if (!response.ok) {
-            throw new Error("Не удалось загрузить задачи");
+            throw new Error("Не удалось загрузить прогресс");
         }
 
-        const data = await response.json();
+        const progress = await response.json();
 
 
-        data.areas.forEach(area => {
+        document
+            .querySelectorAll(".card[data-area]")
+            .forEach(card => {
 
-            const card = document.querySelector(
-                `.card[data-area="${area.name}"]`
-            );
+                const area = card.dataset.area;
 
-            if (!card) {
-                return;
-            }
+                const value = progress[area] ?? 0;
 
-            if (!area.tasks || area.tasks.length === 0) {
-                return;
-            }
+                const line =
+                    card.querySelector(".line");
 
-
-            let totalProgress = 0;
+                const percent =
+                    card.querySelector(".progress_percent");
 
 
-            area.tasks.forEach(task => {
+                line.style.width = `${value}%`;
 
-                switch (task.status) {
-
-                    case "Done":
-                        totalProgress += 100;
-                        break;
-
-                    case "In progress":
-                        totalProgress += 50;
-                        break;
-
-                    case "Not done":
-                        totalProgress += 0;
-                        break;
-
-                    default:
-                        console.warn(
-                            `Неизвестный статус: ${task.status}`
-                        );
-
-                }
+                percent.textContent = `${value}%`;
 
             });
-
-
-            const progress =
-                totalProgress / area.tasks.length;
-
-
-            const line =
-                card.querySelector(".line");
-
-            const percent =
-                card.querySelector(".progress_percent");
-
-
-            line.style.width =
-                `${progress}%`;
-
-            percent.textContent =
-                `${Math.round(progress)}%`;
-
-        });
 
     } catch (error) {
 
@@ -91,15 +49,8 @@ async function loadProgress() {
 }
 
 
-/*
-    Первая загрузка
-*/
 loadProgress();
 
-
-/*
-    Обновление каждые 30 секунд
-*/
 setInterval(
     loadProgress,
     30000
