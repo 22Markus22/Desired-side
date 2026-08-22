@@ -2,7 +2,12 @@ async function loadProgress() {
 
     try {
 
-        const response = await fetch("/api/tasks");
+        const response = await fetch(
+            `/api/tasks?t=${Date.now()}`,
+            {
+                cache: "no-store"
+            }
+        );
 
         if (!response.ok) {
             throw new Error("Не удалось загрузить задачи");
@@ -20,7 +25,6 @@ async function loadProgress() {
             if (!card) {
                 return;
             }
-
 
             if (!area.tasks || area.tasks.length === 0) {
                 return;
@@ -67,7 +71,8 @@ async function loadProgress() {
                 card.querySelector(".progress_percent");
 
 
-            line.style.width = `${progress}%`;
+            line.style.width =
+                `${progress}%`;
 
             percent.textContent =
                 `${Math.round(progress)}%`;
@@ -86,4 +91,16 @@ async function loadProgress() {
 }
 
 
+/*
+    Первая загрузка
+*/
 loadProgress();
+
+
+/*
+    Обновление каждые 30 секунд
+*/
+setInterval(
+    loadProgress,
+    30000
+);

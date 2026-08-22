@@ -158,7 +158,8 @@ button{
 }
 
 .progress_bar {
-    margin: 50px;
+    margin-left: 50px;
+    margin-top: 30px;
 }
 
 .progress_background {
@@ -180,5 +181,7 @@ button{
 .progress_percent {
     display: block;
     margin-top: 10px;
+    margin-left: 50px;
+    margin-bottom: 40px;
     font-size: 14px;
 }

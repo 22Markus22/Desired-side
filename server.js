@@ -151,16 +151,26 @@ app.get("/api/tasks", async (req, res) => {
     try {
 
         const response = await fetch(
-            "https://raw.githubusercontent.com/22Markus22/Desired-side/main/tasks.json"
+            `https://raw.githubusercontent.com/22Markus22/Desired-side/main/tasks.json?t=${Date.now()}`,
+            {
+                cache: "no-store"
+            }
         );
 
+
         if (!response.ok) {
+
             throw new Error(
                 `GitHub ответил с кодом ${response.status}`
             );
+
         }
 
+
         const data = await response.json();
+
+
+        res.set("Cache-Control", "no-store");
 
         res.json(data);
 
@@ -171,16 +181,13 @@ app.get("/api/tasks", async (req, res) => {
             error
         );
 
+
         res.status(500).json({
+
             message: "Не удалось загрузить задачи"
+
         });
 
     }
-
-});
-
-app.listen(3000, () => {
-
-    console.log("Server started: http://localhost:3000");
 
 });
