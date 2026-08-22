@@ -5,7 +5,7 @@
             "tasks": [
                 {
                     "name": "Система регистрации",
-                    "status": "Done"
+                    "status": "Not done"
                 },
                 {
                     "name": "Система авторизации",
