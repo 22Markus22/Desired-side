@@ -151,7 +151,7 @@ app.get("/api/tasks", async (req, res) => {
     try {
 
         const response = await fetch(
-            "https://raw.githubusercontent.com/22Markus22/Desired-side/main/tasks.json"
+            "https://raw.githubusercontent.com/22Markus22/Desired-side/tasks.json"
         );
 
         if (!response.ok) {
