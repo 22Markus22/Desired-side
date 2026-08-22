@@ -22,7 +22,7 @@
             "tasks": [
                 {
                     "name": "Модели персонажей",
-                    "status": "Done"
+                    "status": "Not started"
                 },
                 {
                     "name": "Окружение",
@@ -35,11 +35,11 @@
             "tasks": [
                 {
                     "name": "Основная сюжетная линия",
-                    "status": "Done"
+                    "status": "In progress"
                 },
                 {
                     "name": "Диалоги",
-                    "status": "Not done"
+                    "status": "Not started"
                 }
             ]
         }
