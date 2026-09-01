@@ -5,25 +5,17 @@ async function register() {
     const username = document.getElementById("username").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-
     const response = await fetch(API + "/api/register", {
-
         method: "POST",
-
         headers: {
-
             "Content-Type": "application/json"
-
         },
 
         body: JSON.stringify({
-
             username,
             email,
             password
-
         })
-
     });
 
     const data = await response.json();
@@ -32,75 +24,57 @@ async function register() {
 
     if (response.ok)
         location.href = "login.html";
-
 }
 
 async function login() {
-
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
-
     const response = await fetch(API + "/api/login", {
 
         method: "POST",
-
         credentials: "include",
-
         headers: {
 
             "Content-Type": "application/json"
 
         },
-
         body: JSON.stringify({
 
             username,
             password
 
         })
-
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-
         alert(data.message);
         return;
-
     }
 
     location.href = "index.html";
-
 }
 
 async function currentUser(){
 
     const response = await fetch(API+"/api/me",{
-
         credentials:"include"
-
     });
 
     if(!response.ok)
         return null;
-
     return await response.json();
-
 }
 
 async function logout(){
 
     await fetch(API+"/api/logout",{
-
         method:"POST",
-
         credentials:"include"
-
     });
 
     location.reload();
-
 }
 
 async function updateHeader() {
@@ -109,14 +83,10 @@ async function updateHeader() {
 
     if (!user)
         return;
-
-
     const header = document.getElementById("headerButtons");
     const hero = document.getElementById("heroButtons");
 
-
     if (header) {
-
         header.innerHTML = `
             <span>
                 ${user.username}
@@ -126,9 +96,7 @@ async function updateHeader() {
                 Выйти
             </button>
         `;
-
     }
-
 
     if (hero) {
 
@@ -141,6 +109,5 @@ async function updateHeader() {
     }
 
 }
-
 
 updateHeader();
