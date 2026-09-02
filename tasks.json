@@ -5,7 +5,7 @@
             "tasks": [
                 {
                     "name": "ИИ Npc",
-                    "status": "Done"
+                    "status": "Not done"
                 },
                 {
                     "name": "Логика механик",
