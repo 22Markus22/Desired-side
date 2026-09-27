@@ -260,138 +260,152 @@ button{
 
 }
 
-@media (max-width:768px){
+@media (max-width: 768px) {
 
-    header{
-        flex-direction:column;
-        justify-content:center;
-        padding:15px 20px;
-        gap:12px;
+    header {
+        height: auto;
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
     }
 
-    header nav{
-        width:100%;
-        justify-content:center;
-        flex-wrap:wrap;
+    nav {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 5px;
     }
 
-    header nav a{
-        font-size:14px;
-        padding:7px 8px;
-        text-align:center;
+    .header-buttons {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
     }
 
-    .header-buttons{
-        width:100%;
-        justify-content:center;
+    .hero {
+        padding: 80px 15px;
     }
 
-    .header-buttons button{
-        flex:1 1 150px;
-        min-width:0;
+    .hero h1 {
+        font-size: 48px;
     }
 
-    footer{
-        min-height:0;
-        padding:30px 20px;
-        flex-direction:column;
-        align-items:center;
-        gap:25px;
+    .hero h2 {
+        font-size: 26px;
     }
 
-    .column{
-        margin:0;
-        width:100%;
-        align-items:center;
+    .hero-buttons {
+        flex-wrap: wrap;
     }
 
-    .hero{
-        padding:80px 20px;
+    .about {
+        padding: 40px 10px;
     }
 
-    .about{
-        width:92%;
-        padding:40px 0;
+    /* Три блока остаются в ряд */
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 30px;
     }
 
-    .about h2{
-        margin-bottom:30px;
+    .card {
+        width: 100%;
+        min-width: 0;
+        padding: 12px;
     }
 
-    .cards{
-        grid-template-columns:1fr;
-        gap:20px;
+    .card h3 {
+        font-size: 16px;
+        margin-bottom: 10px;
     }
 
-    .gallery{
-        width:92%;
-        margin:40px auto;
-        flex-direction:column;
-        gap:20px;
+    .card p {
+        font-size: 13px;
+        line-height: 1.4;
     }
 
-    .gallery img{
-        width:100%;
+    .warning {
+        width: 100%;
+        padding: 15px;
     }
 
-    .hero-buttons{
-        gap:10px;
+    .gallery {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 10px;
+        margin: 40px auto;
     }
 
-    .hero-buttons button{
-        width:min(100%, 280px);
+    .gallery img {
+        width: 100%;
+        height: auto;
     }
 
+    footer {
+        height: auto;
+        padding: 30px 20px;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .column {
+        margin: 0;
+    }
 }
 
-@media (max-width:480px){
+@media (max-width: 768px) {
 
-    header{
-        padding:12px 12px;
+    header {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+            "logo auth"
+            "nav nav";
+
+        height: auto;
+        padding: 12px 15px;
+        gap: 10px 15px;
+        align-items: center;
     }
 
-    .logo{
-        font-size:28px;
+    /* Логотип */
+    header > .logo {
+        grid-area: logo;
     }
 
-    header nav{
-        flex-direction:column;
-        gap:4px;
+    /* Авторизация */
+    .header-buttons {
+        grid-area: auth;
+
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 6px;
+
+        width: 100%;
     }
 
-    header nav a{
-        width:100%;
+    .header-buttons button {
+        padding: 7px 10px;
+        font-size: 12px;
+        white-space: nowrap;
     }
 
-    .header-buttons{
-        flex-direction:column;
-        width:100%;
+    /* Навигация */
+    header > nav {
+        grid-area: nav;
+
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 3px;
+        width: 100%;
     }
 
-    .header-buttons button{
-        width:100%;
-        flex:0 0 auto;
+    header > nav a {
+        font-size: 13px;
+        padding: 6px 8px;
     }
-
-    .hero{
-        padding:60px 15px;
-    }
-
-    .hero h1{
-        font-size:clamp(34px, 12vw, 48px);
-    }
-
-    .about{
-        width:94%;
-        padding:30px 0;
-    }
-
-    .card h3,
-    .card p,
-    .warning h3,
-    .warning p{
-        margin-left:10px;
-        margin-right:10px;
-    }
-
 }
