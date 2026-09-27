@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS users(
 )
 `).run();
 
-// Добавляем роль существующим пользователям, если колонка еще не создана.
 const userColumns = db.prepare("PRAGMA table_info(users)").all();
 const hasRoleColumn = userColumns.some(column => column.name === "role");
 
@@ -53,8 +52,6 @@ function auth(req, res, next) {
 
         const payload = jwt.verify(token, SECRET);
 
-        // Берем актуальную роль из базы, чтобы изменение роли
-        // применялось даже для уже существующей сессии.
         const user = db.prepare(
             "SELECT id, username, email, role FROM users WHERE id=?"
         ).get(payload.id);
