@@ -11,51 +11,58 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
-
 body{
-
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-background:#fafafa;
-
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+    background:#fafafa;
 }
 
 .auth-box{
-
-width:420px;
-padding:40px;
-background:white;
-border-radius:12px;
-box-shadow:0 0 15px rgba(0,0,0,.1);
-
+    width:min(100%, 420px);
+    padding:clamp(24px, 6vw, 40px);
+    background:white;
+    border-radius:12px;
+    box-shadow:0 0 15px rgba(0,0,0,.1);
 }
 
-input{
-
-width:100%;
-padding:12px;
-margin-bottom:15px;
-border-radius:8px;
-border:1px solid #ddd;
-
+.auth-box h1{
+    margin-bottom:25px;
+    text-align:center;
+    font-size:clamp(28px, 7vw, 36px);
 }
 
-button{
-
-width:100%;
-padding:12px;
-
+.auth-box input{
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    border-radius:8px;
+    border:1px solid #ddd;
+    font-size:16px;
+    outline:none;
 }
 
-h1{
-
-margin-bottom:25px;
-text-align:center;
-
+.auth-box input:focus{
+    border-color:#2196f3;
 }
 
+.auth-box button{
+    width:100%;
+    padding:12px;
+    font-size:16px;
+}
+
+.auth-box p{
+    text-align:center;
+    margin-top:15px;
+}
+
+.auth-box a{
+    color:#2196f3;
+    text-decoration:none;
+}
 </style>
 
 </head>
@@ -68,7 +75,7 @@ text-align:center;
 <input
 id="username"
 placeholder="Имя Пользователя"
-type="email">
+type="text">
 
 <input
 id="password"

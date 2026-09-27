@@ -2,41 +2,77 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family: Arial, sans-serif;
+    font-family:Arial,sans-serif;
+}
+
+html{
+    overflow-x:hidden;
 }
 
 body{
     background:#fafafa;
     color:#111;
+    min-width:0;
 }
 
 header{
-    height:70px;
+    min-height:70px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:0 40px;
+    gap:20px;
+    padding:12px 40px;
     border-bottom:1px solid #ddd;
 }
 
 footer{
-    height:180px;
+    min-height:180px;
     display:flex;
     justify-content:space-between;
     padding:40px;
-    padding-top:20px;
     border-top:1px solid #ddd;
 }
 
-.logo{
-    color:#ff3b30;
-    font-size:32px;
-    font-weight:bold;
+.logo {
+    font-size: 32px;
+    font-weight: bold;
+
+    background:
+        linear-gradient(
+            110deg,
+            #063b2a 0%,
+            #0f6b4f 25%,
+            #59d6a5 45%,
+            #d0ffe9 50%,
+            #15966a 60%,
+            #063b2a 100%
+        );
+
+    background-size: 250% 100%;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    animation: jadeShine 6s linear infinite;
+}
+
+@keyframes jadeShine {
+
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+
 }
 
 nav{
     display:flex;
     gap:15px;
+    align-items:center;
 }
 
 nav a{
@@ -47,23 +83,26 @@ nav a{
 }
 
 .column{
-    margin-right: auto;
-    margin-left: 100px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    margin-right:auto;
+    margin-left:100px;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
 }
 
 .column a{
-    text-decoration: none;
-    color: #333;
-    padding: 8px 14px;
-    font-size: 16px;
+    text-decoration:none;
+    color:#333;
+    padding:8px 14px;
+    font-size:16px;
 }
 
 .header-buttons{
     display:flex;
     gap:10px;
+    align-items:center;
+    justify-content:flex-end;
+    flex-wrap:wrap;
 }
 
 button{
@@ -71,122 +110,303 @@ button{
     border-radius:8px;
     padding:9px 16px;
     border:none;
+    max-width:100%;
 }
 
 .light{
     background:white;
     border:1px solid #999;
-    transition: background 0.2s;
+    transition:background 0.2s;
 }
 
 .light:hover{
-    background: lightgray;
-    transition: 0.2s;
+    background:lightgray;
 }
 
 .dark{
     background:#222;
     color:white;
-    transition: background 0.2s;
+    transition:background 0.2s;
 }
 
 .dark:hover{
-    background: gray;
-    transition: 0.2s;
+    background:gray;
 }
 
 .hero{
     text-align:center;
-    padding:130px 20px;
+    padding:clamp(70px, 10vw, 130px) 20px;
 }
 
 .hero h1{
-    font-size:72px;
+    font-size:clamp(40px, 6vw, 72px);
     font-weight:700;
+    overflow-wrap:anywhere;
 }
 
 .progress{
-    max-width:1200px;
+    width:min(1200px, 90%);
     margin:auto;
-    padding:60px 20px;
+    padding:60px 0;
+}
+
+.progress h2{
+    font-size:clamp(24px, 4vw, 32px);
+    margin-bottom:20px;
+}
+
+.cards{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+    margin-top:20px;
+    margin-bottom:50px;
+}
+
+.card{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    min-width:0;
+    border:1px solid #ddd;
+    background:#fff;
+    margin-bottom:0;
+    overflow:hidden;
 }
 
 .prog-img{
     padding-top:20px;
     padding-left:20px;
-    width: 170px;
-    height: 170px;
+    width:170px;
+    height:170px;
+    max-width:170px;
+    object-fit:cover;
+    flex:0 0 170px;
 }
 
-.cards{
-    gap:40px;
-    margin-top: 20px;
-    margin-bottom:50px;
-}
-
-.card{
-    display: flex;
-    border: solid #ddd;
-    margin-bottom:15px;
+.card > div:last-child{
+    min-width:0;
+    flex:1;
 }
 
 .card h3{
     padding-top:20px;
     padding-left:30px;
+    padding-right:20px;
     margin-bottom:15px;
+    overflow-wrap:anywhere;
 }
 
 .card p{
     padding-left:30px;
+    padding-right:20px;
     color:#666;
     line-height:1.6;
+    overflow-wrap:anywhere;
 }
 
-
 .gallery{
-    max-width:1200px;
+    width:min(1200px, 90%);
     margin:70px auto;
     display:flex;
     justify-content:space-between;
     gap:40px;
-    padding:0 20px;
 }
 
 .gallery img{
     width:48%;
+    max-width:100%;
+    height:auto !important;
     border-radius:8px;
 }
 
-.progress_bar {
-    margin: 50px;
+.progress_bar{
+    margin:35px 30px 30px;
 }
 
-.progress_background {
-    width: 500px;
-    height: 8px;
-
-    background: #d9d9d9;
-
-    border-radius: 10px;
-
-    overflow: hidden;
+.progress_background{
+    width:100%;
+    max-width:500px;
+    height:8px;
+    background:#d9d9d9;
+    border-radius:10px;
+    overflow:hidden;
 }
 
-.line {
-    width: 0%;
-    height: 8px;
-
-    background: #2196f3;
-
-    border-radius: 10px;
-
-    transition: width 0.5s ease;
+.line{
+    width:0%;
+    height:8px;
+    background:#2196f3;
+    border-radius:10px;
+    transition:width 0.5s ease;
 }
 
-.progress_percent {
-    display: block;
+.progress_percent{
+    display:block;
+    margin-top:10px;
+    font-size:14px;
+}
 
-    margin-top: 10px;
+@media (max-width:1024px){
 
-    font-size: 14px;
+    header{
+        padding:12px 24px;
+    }
+
+    nav a{
+        padding:8px 10px;
+    }
+
+    .progress,
+    .gallery{
+        width:94%;
+    }
+
+}
+
+@media (max-width:768px){
+
+    header{
+        flex-direction:column;
+        justify-content:center;
+        padding:15px 20px;
+        gap:12px;
+    }
+
+    header nav{
+        width:100%;
+        justify-content:center;
+        flex-wrap:wrap;
+    }
+
+    header nav a{
+        font-size:14px;
+        padding:7px 8px;
+        text-align:center;
+    }
+
+    .header-buttons{
+        width:100%;
+        justify-content:center;
+    }
+
+    .header-buttons button{
+        flex:1 1 150px;
+    }
+
+    .hero{
+        padding:75px 20px;
+    }
+
+    .progress{
+        width:92%;
+        padding:40px 0;
+    }
+
+    .card{
+        flex-direction:column;
+        gap:0;
+    }
+
+    .prog-img{
+        width:100%;
+        max-width:220px;
+        height:160px;
+        padding:20px 0 0;
+        align-self:center;
+        object-fit:cover;
+        flex:0 0 auto;
+    }
+
+    .card h3{
+        padding:15px 15px 0;
+        margin-bottom:10px;
+    }
+
+    .card p{
+        padding:0 15px;
+    }
+
+    .progress_bar{
+        margin:25px 15px 20px;
+    }
+
+    .progress_background{
+        max-width:none;
+    }
+
+    .gallery{
+        width:92%;
+        margin:40px auto;
+        flex-direction:column;
+        gap:20px;
+    }
+
+    .gallery img{
+        width:100%;
+    }
+
+    footer{
+        min-height:0;
+        padding:30px 20px;
+        flex-direction:column;
+        align-items:center;
+        gap:20px;
+    }
+
+    .column{
+        margin:0;
+        align-items:center;
+        width:100%;
+    }
+
+}
+
+@media (max-width:480px){
+
+    header{
+        padding:12px;
+    }
+
+    .logo{
+        font-size:28px;
+    }
+
+    header nav{
+        flex-direction:column;
+        gap:4px;
+    }
+
+    header nav a{
+        width:100%;
+    }
+
+    .header-buttons{
+        flex-direction:column;
+        width:100%;
+    }
+
+    .header-buttons button{
+        width:100%;
+        flex:0 0 auto;
+    }
+
+    .hero{
+        padding:60px 15px;
+    }
+
+    .progress{
+        width:94%;
+        padding:30px 0;
+    }
+
+    .prog-img{
+        max-width:180px;
+        height:140px;
+    }
+
+    .progress_percent{
+        text-align:left;
+    }
+
 }

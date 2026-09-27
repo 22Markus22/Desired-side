@@ -1,16 +1,14 @@
-const API = "http://localhost:3000";
-
 async function register() {
 
-    const username = document.getElementById("username").value;
-    const email = document.getElementById("email").value;
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
-    const response = await fetch(API + "/api/register", {
+
+    const response = await fetch("/api/register", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-
         body: JSON.stringify({
             username,
             email,
@@ -27,22 +25,19 @@ async function register() {
 }
 
 async function login() {
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    const response = await fetch(API + "/api/login", {
 
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+
+    const response = await fetch("/api/login", {
         method: "POST",
         credentials: "include",
         headers: {
-
             "Content-Type": "application/json"
-
         },
         body: JSON.stringify({
-
             username,
             password
-
         })
     });
 
@@ -56,22 +51,23 @@ async function login() {
     location.href = "index.html";
 }
 
-async function currentUser(){
+async function currentUser() {
 
-    const response = await fetch(API+"/api/me",{
-        credentials:"include"
+    const response = await fetch("/api/me", {
+        credentials: "include"
     });
 
-    if(!response.ok)
+    if (!response.ok)
         return null;
+
     return await response.json();
 }
 
-async function logout(){
+async function logout() {
 
-    await fetch(API+"/api/logout",{
-        method:"POST",
-        credentials:"include"
+    await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include"
     });
 
     location.reload();
@@ -83,15 +79,18 @@ async function updateHeader() {
 
     if (!user)
         return;
+
     const header = document.getElementById("headerButtons");
     const hero = document.getElementById("heroButtons");
 
     if (header) {
-        header.innerHTML = `
-            <span>
-                ${user.username}
-            </span>
 
+        header.innerHTML = `
+            <span>${user.username}</span>
+            ${user.role === "admin"
+                ? `<button class="light" onclick="location.href='admin.html'">Админ-панель</button>`
+                : ""
+            }
             <button class="dark" onclick="logout()">
                 Выйти
             </button>
@@ -105,9 +104,7 @@ async function updateHeader() {
                 Добро пожаловать, ${user.username}
             </h3>
         `;
-
     }
-
 }
 
 updateHeader();

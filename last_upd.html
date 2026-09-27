@@ -1,63 +1,134 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Last Update</title>
+    <title>Последние нововведения</title>
     <link rel="stylesheet" href="style_lu.css">
-</head> 
-
-<script src="auth.js"></script>
-<script>
-(async()=>{
-const user=await currentUser();
-if(!user)
-    return;
-document.getElementById("headerButtons").innerHTML=`
-<span style="padding-top:9px">
-${user.username}
-</span>
-<button class="dark"
-onclick="logout()">
-Выйти
-</button>
-`;
-})();
-</script>
-
+</head>
 <body>
 <header>
     <nav>
-    <a href="index.html"> <div class="logo">DS</div> </a>
+        <a href="index.html"><div class="logo">DS</div></a>
     </nav>
+
     <nav>
         <a href="index.html">Главная</a>
         <a href="current_work.html">Текущий этап разработки</a>
         <a href="#foot">Соцсети</a>
     </nav>
+
     <div id="headerButtons" class="header-buttons">
-    <button class="light"onclick="location.href='login.html'">Войти</button>
-    <button class="dark"onclick="location.href='register.html'">Регистрация</button>
+        <button class="light" onclick="location.href='login.html'">Войти</button>
+        <button class="dark" onclick="location.href='register.html'">Регистрация</button>
     </div>
 </header>
 
 <section class="about">
-    <h2>PatchNote</h2>
-    <div class="cards">
-        <div class="card">
-            <h3>HotFix Ver. 0.1</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia impedit ut iure incidunt ab alias sed delectus labore quos facere. Delectus impedit nemo veritatis exercitationem, odio sit quod porro totam reiciendis, placeat laudantium fuga asperiores quasi nisi consectetur nostrum dolores praesentium tempore aliquam, saepe quaerat corporis! Tempore reiciendis error distinctio officiis molestias, laudantium sint maxime impedit sed sequi neque, dolor eveniet possimus quo quae esse ab, veritatis quisquam non dicta. Laudantium minus, non rerum consectetur atque repudiandae ea unde alias culpa. Magnam, ipsum! Nostrum distinctio ducimus magni odit fugit aspernatur perferendis possimus ipsum, temporibus nulla consequatur natus veniam error qui.</p>
-        </div>
+    <h2>Последние нововведения</h2>
+
+    <div id="posts" class="cards">
+        <p class="loading">Загрузка...</p>
+    </div>
 </section>
 
 <footer>
     <nav>
-    <a href="#top"> <div class="logo">DS</div> </a>
+        <a href="#top"><div class="logo">DS</div></a>
     </nav>
+
     <nav class="column">
         <a id="foot">Соцсети</a>
         <a href="#">Ссылка на Steam</a>
     </nav>
 </footer>
+
+<script src="auth.js"></script>
+<script>
+async function loadPosts() {
+
+    const container = document.getElementById("posts");
+
+    try {
+
+        const response = await fetch("/api/posts", {
+            cache: "no-store"
+        });
+
+        if (!response.ok)
+            throw new Error("Ошибка загрузки постов");
+
+        const posts = await response.json();
+
+        if (posts.length === 0) {
+            container.innerHTML = `
+                <div class="card">
+                    <h3>Пока нет нововведений</h3>
+                    <p>Здесь будут появляться новые записи.</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = posts.map(post => `
+            <article class="card">
+                <h3>${escapeHtml(post.title)}</h3>
+                <p class="post-date">${formatDate(post.created_at)}</p>
+                <p>${escapeHtml(post.content).replace(/\n/g, "<br>")}</p>
+            </article>
+        `).join("");
+
+    } catch (error) {
+
+        console.error(error);
+
+        container.innerHTML = `
+            <div class="card">
+                <h3>Ошибка</h3>
+                <p>Не удалось загрузить нововведения.</p>
+            </div>
+        `;
+    }
+}
+
+function escapeHtml(text) {
+
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function formatDate(date) {
+
+    return new Date(date).toLocaleString("ru-RU", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
+
+async function setupLastUpdates() {
+
+    const user = await currentUser();
+    const header = document.getElementById("headerButtons");
+
+    if (user && header) {
+
+        header.innerHTML = `
+            <span>${user.username}</span>
+            ${user.role === "admin"
+                ? `<button class="light" onclick="location.href='admin.html'">Админ-панель</button>`
+                : ""
+            }
+            <button class="dark" onclick="logout()">Выйти</button>
+        `;
+    }
+}
+
+setupLastUpdates();
+loadPosts();
+</script>
 </body>
 </html>

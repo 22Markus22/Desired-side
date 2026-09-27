@@ -68,5 +68,5 @@ loadProgress();
 
 setInterval(
     loadProgress,
-    10000
+    60000
 );
