@@ -18,6 +18,18 @@ CREATE TABLE IF NOT EXISTS users(
 )
 `).run();
 
+db.prepare(`
+CREATE TABLE IF NOT EXISTS audit_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    username TEXT,
+    action TEXT NOT NULL,
+    details TEXT,
+    ip TEXT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+)
+`).run();
+
 const userColumns = db.prepare("PRAGMA table_info(users)").all();
 const hasRoleColumn = userColumns.some(column => column.name === "role");
 
@@ -38,15 +50,53 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(__dirname));
+function writeAuditLog(
+    req,
+    action,
+    details = "",
+    actor = null,
+    attemptedUsername = null
+) {
+    try {
+        db.prepare(`
+            INSERT INTO audit_logs (
+                user_id,
+                username,
+                action,
+                details,
+                ip
+            )
+            VALUES (?, ?, ?, ?, ?)
+        `).run(
+            actor?.id ?? null,
+            actor?.username ?? attemptedUsername ?? null,
+            action,
+            String(details).slice(0, 1000),
+            req.ip || null
+        );
+    } catch (error) {
+        console.error(
+            "Ошибка записи журнала аудита:",
+            error.message
+        );
+    }
+}
 
 function auth(req, res, next) {
 
     const token = req.cookies.token;
 
-    if (!token)
+    if (!token) {
+        writeAuditLog(
+            req,
+            "auth_failed",
+            `${req.method} ${req.path}: отсутствует токен`
+        );
+
         return res.status(401).json({
             message: "Не авторизован"
         });
+    }
 
     try {
 
@@ -65,19 +115,31 @@ function auth(req, res, next) {
         next();
 
     } catch {
+        writeAuditLog(
+            req,
+            "auth_failed",
+            `${req.method} ${req.path}: недействительный токен`
+        );
 
-        res.status(401).json({
+        return res.status(401).json({
             message: "Недействительный токен"
         });
     }
 }
 
 function adminOnly(req, res, next) {
+    if (req.user.role !== "admin") {
+        writeAuditLog(
+            req,
+            "access_denied",
+            `Запрещён доступ: ${req.method} ${req.path}`,
+            req.user
+        );
 
-    if (req.user.role !== "admin")
         return res.status(403).json({
             message: "Недостаточно прав"
         });
+    }
 
     next();
 }
@@ -85,25 +147,52 @@ function adminOnly(req, res, next) {
 app.post("/api/register", async (req, res) => {
     const { username, email, password } = req.body;
 
-    if (!username || !email || !password)
+    if (!username || !email || !password) {
+        writeAuditLog(
+            req,
+            "registration_failed",
+            "Не заполнены обязательные поля",
+            null,
+            username || null
+        );
+
         return res.status(400).json({
             message: "Заполните все поля"
         });
+    }
 
     const exist = db.prepare(
         "SELECT * FROM users WHERE username=? OR email=?"
     ).get(username, email);
 
-    if (exist)
+    if (exist) {
+        writeAuditLog(
+            req,
+            "registration_failed",
+            "Имя пользователя или email уже заняты",
+            null,
+            username
+        );
+
         return res.status(400).json({
             message: "Такой пользователь уже существует"
         });
-
+    }
     const hash = await bcrypt.hash(password, 10);
 
-    db.prepare(
+    const result = db.prepare(
         "INSERT INTO users(username,email,password) VALUES(?,?,?)"
     ).run(username, email, hash);
+
+    writeAuditLog(
+        req,
+        "registration_success",
+        "Создан аккаунт",
+        {
+            id: result.lastInsertRowid,
+            username
+        }
+    );
 
     res.json({
         message: "Регистрация успешна"
@@ -118,17 +207,35 @@ app.post("/api/login", async (req, res) => {
         "SELECT * FROM users WHERE username=?"
     ).get(username);
 
-    if (!user)
+    if (!user) {
+        writeAuditLog(
+            req,
+            "login_failed",
+            "Неверное имя пользователя или пароль",
+            null,
+            username || null
+        );
+
         return res.status(401).json({
             message: "Неверное имя пользователя или пароль"
         });
+    }
 
     const ok = await bcrypt.compare(password, user.password);
 
-    if (!ok)
+    if (!ok) {
+        writeAuditLog(
+            req,
+            "login_failed",
+            "Неверное имя пользователя или пароль",
+            null,
+            username
+        );
+
         return res.status(401).json({
             message: "Неверное имя пользователя или пароль"
         });
+    }
 
     const token = jwt.sign(
         {
@@ -139,6 +246,13 @@ app.post("/api/login", async (req, res) => {
         {
             expiresIn: "7d"
         }
+    );
+
+    writeAuditLog(
+        req,
+        "login_success",
+        "Успешный вход",
+        user
     );
 
     res.cookie("token", token, {
@@ -157,7 +271,34 @@ app.get("/api/me", auth, (req, res) => {
 });
 
 app.post("/api/logout", (req, res) => {
+    let actor = null;
+    const token = req.cookies.token;
+
+    if (token) {
+        try {
+            const payload = jwt.verify(token, SECRET);
+
+            actor = db.prepare(`
+                SELECT id, username, role
+                FROM users
+                WHERE id = ?
+            `).get(payload.id) || null;
+        } catch {
+            // Недействительный токен не сохраняем в журнале.
+        }
+    }
+
+    writeAuditLog(
+        req,
+        "logout",
+        actor
+            ? "Выход из аккаунта"
+            : "Выход без действующей сессии",
+        actor
+    );
+
     res.clearCookie("token");
+
     res.json({
         message: "Вы вышли"
     });
@@ -198,24 +339,55 @@ app.post("/api/posts", auth, adminOnly, (req, res) => {
         FROM posts
         WHERE id=?
     `).get(result.lastInsertRowid);
+    writeAuditLog(
+        req,
+        "post_created",
+        `Создана публикация #${post.id}: ${post.title}`,
+        req.user
+    );
 
     res.status(201).json(post);
 });
 
 app.delete("/api/posts/:id", auth, adminOnly, (req, res) => {
-
     const result = db.prepare(
         "DELETE FROM posts WHERE id=?"
     ).run(req.params.id);
 
-    if (result.changes === 0)
+    if (result.changes === 0) {
         return res.status(404).json({
             message: "Пост не найден"
         });
+    }
+
+    writeAuditLog(
+        req,
+        "post_deleted",
+        `Удалена публикация #${req.params.id}`,
+        req.user
+    );
 
     res.json({
         message: "Пост удален"
     });
+});
+
+app.get("/api/audit-logs", auth, adminOnly, (req, res) => {
+    const logs = db.prepare(`
+        SELECT
+            id,
+            username,
+            action,
+            details,
+            ip,
+            created_at
+        FROM audit_logs
+        ORDER BY id DESC
+        LIMIT 200
+    `).all();
+
+    res.set("Cache-Control", "no-store");
+    res.json(logs);
 });
 
 app.get("/api/tasks", async (req, res) => {

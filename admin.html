@@ -75,6 +75,70 @@
     color:#b42318;
     margin-bottom:15px;
 }
+.audit-section {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.audit-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.audit-heading h2 {
+    font-size: clamp(22px, 4vw, 30px);
+}
+
+.audit-message {
+    margin-bottom: 12px;
+    color: #666;
+}
+
+.audit-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid #ddd;
+}
+
+.audit-table {
+    width: 100%;
+    min-width: 700px;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.audit-table th,
+.audit-table td {
+    padding: 12px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #ddd;
+    overflow-wrap: anywhere;
+}
+
+.audit-table th {
+    background: #f3f3f3;
+    font-weight: bold;
+}
+
+.audit-table tr:last-child td {
+    border-bottom: none;
+}
+
+@media (max-width: 480px) {
+    .audit-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .audit-heading button {
+        width: 100%;
+    }
+}
 
 @media (max-width:768px){
 
@@ -145,6 +209,20 @@
 
     <h2>Опубликованные посты</h2>
     <div id="adminPosts"></div>
+    <section class="audit-section">
+        <div class="audit-heading">
+            <h2>Журнал аудита</h2>
+            <button class="light" onclick="loadAuditLogs()">
+                Обновить
+            </button>
+        </div>
+
+        <p id="auditMessage" class="audit-message"></p>
+
+        <div id="auditLogs">
+            Загрузка журнала...
+        </div>
+    </section>
 </main>
 
 <script src="auth.js"></script>
@@ -221,6 +299,86 @@ async function loadAdminPosts() {
     `).join("");
 }
 
+
+async function loadAuditLogs() {
+    const container = document.getElementById("auditLogs");
+    const message = document.getElementById("auditMessage");
+
+    message.textContent = "";
+    container.textContent = "Загрузка журнала...";
+
+    try {
+        const response = await fetch("/api/audit-logs", {
+            credentials: "include",
+            cache: "no-store"
+        });
+
+        if (!response.ok) {
+            container.textContent = "Не удалось загрузить журнал.";
+            return;
+        }
+
+        const logs = await response.json();
+
+        if (!Array.isArray(logs) || logs.length === 0) {
+            container.textContent = "Записей пока нет.";
+            return;
+        }
+
+        const actionLabels = {
+            registration_success: "Регистрация",
+            registration_failed: "Ошибка регистрации",
+            login_success: "Успешный вход",
+            login_failed: "Неудачный вход",
+            logout: "Выход",
+            post_created: "Создание публикации",
+            post_deleted: "Удаление публикации",
+            auth_failed: "Ошибка авторизации",
+            access_denied: "Отказ в доступе"
+        };
+
+        container.innerHTML = `
+            <div class="audit-table-wrap">
+                <table class="audit-table">
+                    <thead>
+                        <tr>
+                            <th>Дата и время</th>
+                            <th>Пользователь</th>
+                            <th>Действие</th>
+                            <th>Подробности</th>
+                            <th>IP-адрес</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${logs.map(log => {
+                            const date = log.created_at
+                                ? new Date(
+                                    log.created_at.replace(" ", "T") + "Z"
+                                ).toLocaleString("ru-RU")
+                                : "—";
+
+                            return `
+                                <tr>
+                                    <td>${escapeHtml(date)}</td>
+                                    <td>${escapeHtml(log.username || "—")}</td>
+                                    <td>${escapeHtml(
+                                        actionLabels[log.action] || log.action
+                                    )}</td>
+                                    <td>${escapeHtml(log.details || "—")}</td>
+                                    <td>${escapeHtml(log.ip || "—")}</td>
+                                </tr>
+                            `;
+                        }).join("")}
+                    </tbody>
+                </table>
+            </div>
+        `;
+    } catch (error) {
+        console.error("Ошибка загрузки журнала:", error);
+        container.textContent = "Ошибка соединения с сервером.";
+    }
+}
+
 async function deletePost(id) {
 
     if (!confirm("Удалить этот пост?"))
@@ -239,6 +397,7 @@ async function deletePost(id) {
     }
 
     loadAdminPosts();
+    loadAuditLogs();
 }
 
 function escapeHtml(text) {
@@ -248,6 +407,7 @@ function escapeHtml(text) {
 }
 
 initAdmin();
+
 </script>
 </body>
 </html>
