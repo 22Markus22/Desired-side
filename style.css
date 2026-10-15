@@ -302,7 +302,6 @@ button{
         padding: 40px 10px;
     }
 
-    /* Три блока остаются в ряд */
     .cards {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -383,22 +382,17 @@ button{
     header {
         display: grid;
         grid-template-columns: auto 1fr;
-        grid-template-areas:
-            "logo auth"
-            "nav nav";
-
+        grid-template-areas: "logo auth";
         height: auto;
         padding: 12px 15px;
         gap: 10px 15px;
         align-items: center;
     }
 
-    /* Логотип */
     header > .logo {
         grid-area: logo;
     }
 
-    /* Авторизация */
     .header-buttons {
         grid-area: auth;
 
@@ -416,7 +410,6 @@ button{
         white-space: nowrap;
     }
 
-    /* Навигация */
     header > nav {
         grid-area: nav;
 
@@ -432,7 +425,7 @@ button{
         padding: 6px 8px;
     }
 }
-/* Кнопка-эмблема */
+
 .sidebar-toggle {
     position: relative;
     z-index: 1002;
@@ -441,7 +434,7 @@ button{
     padding: 0;
     border: none;
     border-radius: 0;
-    background: transparent;
+    background-color: transparent;
     cursor: pointer;
     appearance: none;
 }
@@ -450,7 +443,6 @@ button{
     opacity: 0.8;
 }
 
-/* Затемнение */
 .sidebar-overlay {
     position: fixed;
     inset: 0;
@@ -468,7 +460,6 @@ button{
     pointer-events: auto;
 }
 
-/* Боковая панель */
 .sidebar {
     position: fixed;
     top: 0;
@@ -494,7 +485,6 @@ button{
     visibility: visible;
 }
 
-/* Заголовок меню */
 .sidebar-header {
     display: flex;
     align-items: center;
@@ -519,7 +509,6 @@ button{
     background: #eee;
 }
 
-/* Ссылки */
 .sidebar-nav {
     display: flex;
     flex-direction: column;
@@ -556,4 +545,14 @@ body.sidebar-open {
     .sidebar-nav a {
         padding: 14px 12px;
     }
+}
+
+.sidebar-toggle {
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+body.sidebar-open .sidebar-toggle {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 }

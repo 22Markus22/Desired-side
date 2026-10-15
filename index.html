@@ -7,26 +7,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<script src="auth.js"></script>
-<script>
-
-(async()=>{
-const user=await currentUser();
-
-if(!user)
-    return;
-
-document.getElementById("headerButtons").innerHTML=`
-<span style="padding-top:9px">
-${user.username}
-</span>
-<button class="dark"
-onclick="logout()">
-Выйти
-</button>
-`;
-})();
-</script>
 
 <body>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -146,7 +126,7 @@ onclick="logout()">
         <a href="#">Ссылка на Steam</a>
     </nav>
 </footer>
-
+<script src="auth.js"></script>
 <script>
 const sidebar = document.getElementById("sidebar");
 const sidebarOverlay = document.getElementById("sidebarOverlay");

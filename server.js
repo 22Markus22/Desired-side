@@ -284,7 +284,6 @@ app.post("/api/logout", (req, res) => {
                 WHERE id = ?
             `).get(payload.id) || null;
         } catch {
-            // Недействительный токен не сохраняем в журнале.
         }
     }
 
