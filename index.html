@@ -29,19 +29,37 @@ onclick="logout()">
 </script>
 
 <body>
-<header>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <div class="logo" id="top">
-        DS
+<aside class="sidebar" id="sidebar" aria-hidden="true">
+    <div class="sidebar-header">
+        <h2>Навигация</h2>
+
+        <button
+            class="sidebar-close"
+            id="sidebarClose"
+            type="button"
+            aria-label="Закрыть меню">
+            &times;
+        </button>
     </div>
 
-    <aside class="sidebar" id="sidebar">
-        <nav class="sidebar-nav">
-            <a href="index.html">Главная</a>
-            <a href="current_work.html">Текущий этап разработки</a>
-            <a href="last_upd.html">Последние нововведения</a>
-        </nav>
-    </aside>
+    <nav class="sidebar-nav">
+        <a href="index.html">Главная</a>
+        <a href="current_work.html">Текущий этап разработки</a>
+        <a href="last_upd.html">Последние нововведения</a>
+    </nav>
+</aside>
+<header>
+    <button
+        class="logo sidebar-toggle"
+        id="sidebarToggle"
+        type="button"
+        aria-label="Открыть меню"
+        aria-expanded="false">
+        DS
+    </button>
+
 
     <div class="header-buttons" id="headerButtons">
 
@@ -129,5 +147,43 @@ onclick="logout()">
     </nav>
 </footer>
 
+<script>
+const sidebar = document.getElementById("sidebar");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+const sidebarToggle = document.getElementById("sidebarToggle");
+const sidebarClose = document.getElementById("sidebarClose");
+
+function setSidebarOpen(open) {
+    sidebar.classList.toggle("open", open);
+    sidebarOverlay.classList.toggle("open", open);
+    document.body.classList.toggle("sidebar-open", open);
+
+    sidebar.setAttribute("aria-hidden", String(!open));
+
+    sidebarToggle.setAttribute("aria-expanded", String(open));
+    sidebarToggle.setAttribute(
+        "aria-label",
+        open ? "Закрыть меню" : "Открыть меню"
+    );
+}
+
+sidebarToggle.addEventListener("click", () => {
+    setSidebarOpen(!sidebar.classList.contains("open"));
+});
+
+sidebarClose.addEventListener("click", () => {
+    setSidebarOpen(false);
+});
+
+sidebarOverlay.addEventListener("click", () => {
+    setSidebarOpen(false);
+});
+
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+        setSidebarOpen(false);
+    }
+});
+</script>
 </body>
 </html>
